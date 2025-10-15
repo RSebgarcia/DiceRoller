@@ -1,0 +1,266 @@
+/* ... (variables de color de AI Studio sin cambios) ... */
+:root {
+    --bg-color: #131314;                  
+    --card-color: #1e1f22;               
+    --border-color: rgba(255, 255, 255, 0.1); 
+    --text-color: #e3e3e3;              
+    --text-secondary-color: #9e9e9e;      
+    --accent-gradient: linear-gradient(90deg, #8952ff, #4a80ff);
+    --accent-red: #ff5252;               
+    --accent-green: #00e096;              
+    --border-radius: 12px;               
+    --spacing: 20px;
+}
+
+body {
+    font-family: "Google Sans", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: var(--spacing);
+    min-height: 100vh;
+}
+
+/* ------------------- NUEVO: Layout Principal ------------------- */
+.app-container {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dice-tray-area {
+    flex: 1;
+    min-width: 250px;
+}
+
+.main-content {
+    flex: 2;
+}
+
+/* ------------------- NUEVO: Bandeja de Dados y Animación ------------------- */
+.dice-tray {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing);
+    margin-top: 25%;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-content: center;
+    justify-content: center;
+    position: relative;
+}
+
+.tray-placeholder {
+    color: var(--text-secondary-color);
+}
+
+.die {
+    width: 60px;
+    height: 60px;
+    background: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-color);
+    /* Animación */
+    animation: tumble 1s forwards ease-out;
+}
+
+.die.discarded {
+    background-color: #333;
+    color: var(--text-secondary-color);
+    border-color: #444;
+}
+
+@keyframes tumble {
+    0% {
+        transform: translateY(-200px) rotate(0deg);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(20px) rotate(540deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) rotate(720deg);
+        opacity: 1;
+    }
+}
+
+/* ... (resto del CSS desde h1, h2, container, etc.) ... */
+/* Ajuste para el botón secundario */
+.btn.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary-color);
+}
+.btn.btn-secondary:hover {
+    background-color: var(--card-color);
+    filter: none;
+}
+h1, h2 { color: var(--text-secondary-color); text-align: center; margin-bottom: var(--spacing); font-weight: 500; }
+.controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+.btn { background: var(--accent-gradient); color: #fff; border: none; padding: 10px 22px; font-size: 15px; font-weight: 500; border-radius: var(--border-radius); cursor: pointer; transition: filter 0.2s ease, transform 0.1s ease; }
+.btn:hover { filter: brightness(1.2); }
+.btn:active { transform: scale(0.97); }
+.btn.btn-reset { background: transparent; color: var(--accent-red); border: 1px solid var(--accent-red); }
+.btn.btn-reset:hover { background-color: rgba(255, 82, 82, 0.1); filter: none; }
+.results-area { background-color: var(--card-color); padding: var(--spacing); border-radius: var(--border-radius); border: 1px solid var(--border-color); margin-bottom: 30px; }
+.results-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; min-height: 50px; }
+.roll-result { background: var(--accent-gradient); color: #fff; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; border-radius: 50%; cursor: grab; user-select: none; transition: filter 0.2s; }
+.roll-result:hover { filter: brightness(1.2); }
+.dragging { opacity: 0.5; }
+.stats-area { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing); }
+.stat-box { background-color: var(--card-color); padding: var(--spacing); border-radius: var(--border-radius); border: 1px solid var(--border-color); text-align: center; transition: border-color 0.3s; }
+.stat-label { display: block; font-size: 14px; color: var(--text-secondary-color); margin-bottom: 10px; }
+.stat-score { background-color: var(--bg-color); color: var(--text-color); font-size: 36px; font-weight: bold; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 5px; cursor: grab; }
+.stat-modifier { font-size: 20px; color: var(--accent-green); font-weight: bold; }
+.drag-over { background-color: rgba(255, 255, 255, 0.05); box-shadow: 0 0 0 2px rgba(74, 128, 255, 0.5); }
+
+/* Media Queries para Responsive Design */
+@media (max-width: 900px) {
+    .app-container {
+        flex-direction: column;
+    }
+    .stats-area {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-area {
+        grid-template-columns: 1fr;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.roll-result.popup-in {
+    animation: popup 0.3s ease-out forwards;
+}
+
+@keyframes popup {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* ------------------- NUEVO: Estilos para el Modal Personalizado ------------------- */
+dialog {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+}
+
+dialog h3 {
+    margin-top: 0;
+    color: var(--text-color);
+}
+
+dialog p {
+    color: var(--text-secondary-color);
+}
+
+dialog input[type="number"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* ------------------- NUEVO: Estilo para el resultado seleccionado ------------------- */
+.roll-result.selected {
+    box-shadow: 0 0 0 3px var(--accent-blue-hover, #58a6ff); /* Usando el color de acento de GitHub o un azul por defecto */
+    filter: brightness(1.3);
+}
+
+/* Si usas la paleta de AI Studio, este azul funciona mejor */
+.roll-result.selected {
+    box-shadow: 0 0 0 3px #8ab4f8;
+}
+
+/* Ajuste para que los dados en la bandeja no tengan animación al re-mostrarse */
+.die.no-animation {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
+
+/* ------------------- NUEVO: Animaciones de UI ------------------- */
+
+/* Transición para la animación de reordenamiento (FLIP) */
+.roll-result {
+    /* ... (tus estilos existentes para .roll-result) ... */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Animación de "Bouncing Pop" para nuevos elementos */
+.bounce-in {
+    animation: bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ------------------- Estilo para el resultado seleccionado ------------------- */
+.roll-result.selected {
+    box-shadow: 0 0 0 3px #8ab4f8;
+}
+
+/* Ajuste para que los dados en la bandeja no tengan animación al re-mostrarse */
+.die.no-animation {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
