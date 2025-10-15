@@ -8,14 +8,11 @@
 </head>
 <body>
 
-    <!-- =============================================================== -->
-    <!-- ESTOS ELEMENTOS AHORA ESTÁN AFUERA Y ARRIBA DEL APP-CONTAINER -->
     <div class="controls">
         <button id="rollAllBtn" class="btn">Tirar las 6 Estadísticas</button>
         <button id="rollOneBtn" class="btn">Tirar 1 Estadística</button>
         <button id="addManualBtn" class="btn btn-secondary">Añadir Manualmente</button>
     </div>
-    <!-- =============================================================== -->
 
     <div class="app-container">
 
@@ -25,14 +22,23 @@
             </div>
         </div>
 
-        <!-- El main-content ahora solo contiene las áreas de resultados y stats -->
         <div class="main-content">
             <div class="results-area" id="resultsArea">
                 <div id="rollResults" class="results-grid"></div>
+
+                <!-- =============================================================== -->
+                <!-- ESTE ES EL BLOQUE QUE FALTABA. VA AQUÍ DENTRO DEL RESULTS-AREA -->
+                <div id="statAnalysisBox" class="stat-analysis-box" hidden>
+                    <h3>Análisis del Personaje</h3>
+                    <p>Suma Total: <strong id="totalSum">72</strong></p>
+                    <p>Éxito Promedio (DC 12): <strong id="avgSuccess">50%</strong></p>
+                    <p id="statRecommendation" class="recommendation"></p>
+                </div>
+                <!-- =============================================================== -->
+
             </div>
 
             <div class="stats-area">
-                <!-- ... (Cajas de stats sin cambios) ... -->
                 <div class="stat-box" data-stat-name="Fuerza"><span class="stat-label">Fuerza (STR)</span><div class="stat-score drop-zone" data-stat="str" draggable="true">0</div><div class="stat-modifier">+0</div></div>
                 <div class="stat-box" data-stat-name="Destreza"><span class="stat-label">Destreza (DEX)</span><div class="stat-score drop-zone" data-stat="dex" draggable="true">0</div><div class="stat-modifier">+0</div></div>
                 <div class="stat-box" data-stat-name="Constitución"><span class="stat-label">Constitución (CON)</span><div class="stat-score drop-zone" data-stat="con" draggable="true">0</div><div class="stat-modifier">+0</div></div>
@@ -43,9 +49,7 @@
         </div>
     </div>
 
-    <!-- El modal no cambia -->
     <dialog id="appModal">
-        <!-- ... (contenido del modal sin cambios) ... -->
         <form id="modalForm"><h3 id="modalTitle">Título del Modal</h3><p id="modalMessage">Mensaje del modal.</p><input type="number" id="modalInput" min="3" max="18" placeholder="Introduce un valor (3-18)"><div class="modal-actions"><button id="modalCancelBtn" class="btn btn-secondary" type="button">Cancelar</button><button id="modalConfirmBtn" class="btn" type="submit">Confirmar</button></div></form>
     </dialog>
 

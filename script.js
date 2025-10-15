@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modalConfirmBtn = document.getElementById('modalConfirmBtn'),
         modalCancelBtn = document.getElementById('modalCancelBtn');
     
-    // Panel de Análisis
     const statAnalysisBox = document.getElementById('statAnalysisBox');
     const totalSumEl = document.getElementById('totalSum');
     const avgSuccessEl = document.getElementById('avgSuccess');
@@ -155,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             diceTray.appendChild(d);
             return d;
         });
-        await new Promise(r => setTimeout(r, 1200));
+
+        await new Promise(r => setTimeout(r, 750));
+        
         let discardedSet = false;
         rolls.sort((a, b) => b - a).forEach((roll, i) => {
             const d = diceElements[i];
@@ -165,13 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 discardedSet = true;
             }
         });
-        await new Promise(r => setTimeout(r, 1500));
         
         updateUIWithAnimation(() => {
             availableResults.push(resultData);
         });
-
         updateButtonState();
+
+        await new Promise(r => setTimeout(r, 1500));
     }
 
     // 5. Lógica de Modal y Controles
