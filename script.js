@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
         modalInput = document.getElementById('modalInput'),
         modalConfirmBtn = document.getElementById('modalConfirmBtn'),
         modalCancelBtn = document.getElementById('modalCancelBtn');
+    
+    // Panel de Análisis
+    const statAnalysisBox = document.getElementById('statAnalysisBox');
+    const totalSumEl = document.getElementById('totalSum');
+    const avgSuccessEl = document.getElementById('avgSuccess');
+    const recommendationEl = document.getElementById('statRecommendation');
 
     // -- Nuestras Fuentes de la Verdad --
     let availableResults = []; // Almacena los objetos de stats en la bandeja
@@ -65,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // -- FUNCIÓN DE RENDERIZADO MODIFICADA --
     function renderResultsUI(isInitialRender = false) {
         const existingElements = new Set(Array.from(rollResultsDiv.children).map(el => el.dataset.resultId));
         rollResultsDiv.innerHTML = '';
@@ -109,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // -- NUEVA FUNCIÓN DE ORQUESTACIÓN DE ANIMACIÓN (FLIP) --
     function updateUIWithAnimation(updateStateFunction) {
         const firstPositions = new Map();
         rollResultsDiv.childNodes.forEach(child => {
@@ -161,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 discardedSet = true;
             }
         });
-        await new Promise(r => setTimeout(r, 750));
+        await new Promise(r => setTimeout(r, 1500));
         
         updateUIWithAnimation(() => {
             availableResults.push(resultData);
@@ -249,7 +253,52 @@ document.addEventListener('DOMContentLoaded', () => {
         isRolling = false;
     }
 
-    // 6. Lógica de Drag & Drop
+    // 6. Lógica de Análisis
+    function analyzeStats() {
+        const scores = Object.values(assignedStats).map(stat => stat.sum);
+        if (scores.length !== 6) return;
+
+        const totalSum = scores.reduce((sum, score) => sum + score, 0);
+        const successChances = scores.map(score => {
+            const modifier = Math.floor((score - 10) / 2);
+            const rollNeeded = 12 - modifier;
+            const successOutcomes = Math.max(0, 20 - rollNeeded + 1);
+            return (successOutcomes / 20) * 100;
+        });
+        const avgSuccess = successChances.reduce((sum, chance) => sum + chance, 0) / 6;
+
+        let recommendation = "";
+        let recClass = "";
+
+        if (avgSuccess >= 60) {
+            recommendation = "¡Estadísticas heroicas! Este personaje es excepcionalmente poderoso. ¡Ideal para campañas difíciles!";
+            recClass = "rec-heroic";
+        } else if (avgSuccess >= 55) {
+            recommendation = "Un conjunto de estadísticas muy sólido y por encima de la media. ¡Un gran punto de partida!";
+            recClass = "rec-strong";
+        } else if (avgSuccess >= 50) {
+            recommendation = "¡Perfectamente balanceado! Este personaje se alinea con el estándar de D&D, ideal para cualquier aventura.";
+            recClass = "rec-standard";
+        } else if (avgSuccess >= 45) {
+            recommendation = "Un personaje con algunos desafíos. Ofrece una experiencia de juego interesante y con oportunidades de superación.";
+            recClass = "rec-challenging";
+        } else {
+            recommendation = "Estas estadísticas son bastante bajas. Será un desafío considerable. Podrías considerar volver a tirar.";
+            recClass = "rec-low";
+        }
+
+        totalSumEl.textContent = totalSum;
+        avgSuccessEl.textContent = `${Math.round(avgSuccess)}%`;
+        recommendationEl.textContent = recommendation;
+        recommendationEl.className = `recommendation ${recClass}`;
+        statAnalysisBox.hidden = false;
+    }
+
+    function hideStatAnalysis() {
+        statAnalysisBox.hidden = true;
+    }
+
+    // 7. Lógica de Drag & Drop
     function handleDragStart(e) {
         e.target.classList.add('dragging');
         const resultId = e.target.dataset.resultId;
@@ -305,9 +354,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         updateButtonState();
+
+        if (availableResults.length === 0 && Object.keys(assignedStats).length === 6) {
+            analyzeStats();
+        } else {
+            hideStatAnalysis();
+        }
     }
     
-    // 7. Funciones Auxiliares y Eventos
+    // 8. Funciones Auxiliares y Eventos
     function getTotalStatsCount() {
         return availableResults.length + Object.keys(assignedStats).length;
     }
@@ -340,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         assignedStats = {};
         statBoxes.forEach(box => updateStatBox(box.dataset.stat, null));
         diceTray.innerHTML = '<p class="tray-placeholder">Presiona un botón para tirar...</p>';
+        hideStatAnalysis();
         renderResultsUI(isInitialRender);
         updateButtonState();
     }

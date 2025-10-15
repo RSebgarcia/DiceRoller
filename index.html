@@ -8,25 +8,29 @@
 </head>
 <body>
 
+    <!-- =============================================================== -->
+    <!-- ESTOS ELEMENTOS AHORA ESTÁN AFUERA Y ARRIBA DEL APP-CONTAINER -->
+    <div class="controls">
+        <button id="rollAllBtn" class="btn">Tirar las 6 Estadísticas</button>
+        <button id="rollOneBtn" class="btn">Tirar 1 Estadística</button>
+        <button id="addManualBtn" class="btn btn-secondary">Añadir Manualmente</button>
+    </div>
+    <!-- =============================================================== -->
+
     <div class="app-container">
-        <!-- ... (Contenido de app-container sin cambios) ... -->
+
         <div class="dice-tray-area">
-            
             <div id="diceTray" class="dice-tray">
                 <p class="tray-placeholder">Presiona un botón para tirar los dados...</p>
             </div>
         </div>
+
+        <!-- El main-content ahora solo contiene las áreas de resultados y stats -->
         <div class="main-content">
-            
-            <div class="controls">
-                <button id="rollAllBtn" class="btn">Tirar todas</button>
-                <button id="rollOneBtn" class="btn">Tirar 1 Estadística</button>
-                <button id="addManualBtn" class="btn btn-secondary">Añadir Manualmente</button>
-            </div>
             <div class="results-area" id="resultsArea">
-                
                 <div id="rollResults" class="results-grid"></div>
             </div>
+
             <div class="stats-area">
                 <!-- ... (Cajas de stats sin cambios) ... -->
                 <div class="stat-box" data-stat-name="Fuerza"><span class="stat-label">Fuerza (STR)</span><div class="stat-score drop-zone" data-stat="str" draggable="true">0</div><div class="stat-modifier">+0</div></div>
@@ -39,17 +43,10 @@
         </div>
     </div>
 
-    <!-- NUEVO: Modal Personalizado -->
+    <!-- El modal no cambia -->
     <dialog id="appModal">
-        <form id="modalForm">
-            <h3 id="modalTitle">Título del Modal</h3>
-            <p id="modalMessage">Mensaje del modal.</p>
-            <input type="number" id="modalInput" min="3" max="18" placeholder="Introduce un valor (3-18)">
-            <div class="modal-actions">
-                <button id="modalCancelBtn" class="btn btn-secondary" type="button">Cancelar</button>
-                <button id="modalConfirmBtn" class="btn" type="submit">Confirmar</button>
-            </div>
-        </form>
+        <!-- ... (contenido del modal sin cambios) ... -->
+        <form id="modalForm"><h3 id="modalTitle">Título del Modal</h3><p id="modalMessage">Mensaje del modal.</p><input type="number" id="modalInput" min="3" max="18" placeholder="Introduce un valor (3-18)"><div class="modal-actions"><button id="modalCancelBtn" class="btn btn-secondary" type="button">Cancelar</button><button id="modalConfirmBtn" class="btn" type="submit">Confirmar</button></div></form>
     </dialog>
 
     <script src="script.js"></script>
